@@ -1,0 +1,71 @@
+
+from machine import Pin, PWM, time_pulse_us
+from time import sleep_us
+from hcsr04 import HCSR04
+from liquidcrystal import LiquidCrystal
+
+# LCD pin configuration (adjust based on your wiring)
+lcd_rs = Pin(4, Pin.OUT)  # Register Select pin
+lcd_en = Pin(5, Pin.OUT)  # Enable pin
+lcd_d4 = Pin(18, Pin.OUT)  # Data pin 4
+lcd_d5 = Pin(19, Pin.OUT)  # Data pin 5
+lcd_d6 = Pin(13, Pin.OUT)  # Data pin 6
+lcd_d7 = Pin(2, Pin.OUT)  # Data pin 7
+
+# Initialize LCD (adjust number of rows and columns if needed)
+lcd = LiquidCrystal(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7, 16, 2)
+
+# Ultrasonic sensor and other pins (unchanged)
+
+trig_pin = Pin(35, Pin.OUT)
+echo_pin = Pin(34, Pin.IN)
+ultrasonic_sensor = HCSR04(trig_pin, echo_pin)
+
+buzzer_pin = PWM(Pin(15))
+red_led_pin = Pin(32, Pin.OUT)
+yellow_led_pin = Pin(33, Pin.OUT)
+green_led_pin = Pin(25, Pin.OUT)
+
+
+def get_distance():
+    # Trigger the ultrasonic sensor and measure the distance (unchanged)
+    trig_pin.off()
+    sleep_us(2)
+    trig_pin.on()
+    sleep_us(10)
+    trig_pin.off()
+
+    duration = time_pulse_us(echo_pin, 1)
+    distance = duration * 0.034 / 2
+    return distance
+
+
+while True:
+    distance = get_distance()
+
+    # Clear LCD screen and set cursor to beginning
+    lcd.clear()
+
+    if distance < 30:
+        red_led_pin.on()
+        yellow_led_pin.off()
+        green_led_pin.off()
+        buzzer_pin.freq(2000)
+        buzzer_pin.duty(512)
+        lcd.print("NO SPACE AREA")
+    elif 30 <= distance < 80:
+        red_led_pin.off()
+        yellow_led_pin.on()
+        green_led_pin.off()
+        # buzzer_pin.freq(1500)
+        # buzzer_pin.duty(512)
+        lcd.print("PARKING HERE")
+    else:
+        red_led_pin.off()
+        yellow_led_pin.off()
+        green_led_pin.on()
+        buzzer_pin.duty(0)
+        lcd.print("AVAILABLE SPACE")
+
+    sleep_us(1000)
+

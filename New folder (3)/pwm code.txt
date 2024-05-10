@@ -1,0 +1,39 @@
+from machine import Pin,PWM
+from time import sleep
+frequency=5000
+led=PWM(Pin(16),frequency)
+while True:
+    for duty in range (0,1023,5):
+        led.duty(duty)
+        sleep(0.005)
+    for duty in range (1023,0,-5):
+        led.duty(duty)
+        sleep(0.005)
+
+
+
+
+*******************************************
+#With Led
+from machine import TouchPad, Pin
+from time import sleep
+
+capacitiveValue = 500
+threshold = 150
+
+touch_pin = TouchPad(Pin(4))
+led_pin = Pin(2, Pin.OUT)  # Assuming the LED is connected to pin 2
+
+print("\nESP32 Touch Demo")
+
+while True:
+    capacitiveValue = touch_pin.read()
+    if capacitiveValue < threshold:
+        print("touch")
+        led_pin.value(1)  # Turn on the LED
+        sleep(0.005)
+    else:
+        print("nottouch")
+        led_pin.value(0)  # Turn off the LED
+        sleep(0.005)
+

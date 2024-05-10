@@ -1,0 +1,7 @@
+from machine import TouchPad,Pin
+from time import sleep
+touch_pin = TouchPad(Pin(4, mode=Pin.IN))
+while True:
+    touch_value=touch_pin.read()
+    print("touch_value:" ,touch_value)
+    sleep(0.5)

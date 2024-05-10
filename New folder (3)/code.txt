@@ -1,0 +1,28 @@
+from machine import Pin
+from time import sleep,sleep_ms
+
+pins=[Pin(15,Pin.OUT),Pin(2,Pin.OUT),Pin(13,Pin.OUT),
+Pin(14,Pin.OUT),Pin(27,Pin.OUT),Pin(19,Pin.OUT),
+Pin(18,Pin.OUT)]
+
+digits=[
+[0,0,0,0,0,0,1],
+[1,0,0,1,1,1,1],
+[0,0,1,0,0,1,0],
+[0,0,0,0,1,1,0],
+[1,0,0,1,1,0,0],
+[0,1,0,0,1,0,0],
+[0,1,0,0,0,0,0],
+[0,0,0,1,1,1,1],
+[0,0,0,0,0,0,0],
+[0,0,0,1,1,0,0],
+]
+
+while true:
+  for i in range(10):
+  for j in range(7):
+    pins[j].value(digits[i][j])
+    sleep_ms(500)
+  
+  
+

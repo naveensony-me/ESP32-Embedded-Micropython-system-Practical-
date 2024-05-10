@@ -1,0 +1,40 @@
+import machine
+import time
+red = machine.Pin(14, machine.Pin.OUT)
+yellow = machine.Pin(2, machine.Pin.OUT)
+green = machine.Pin(4, machine.Pin.OUT)
+switch = machine.Pin(5, machine.Pin.IN)
+
+# Initial state
+current_state = "off"
+click_count = 0
+
+try:
+    while True:
+        if switch.value() == 0:  # Switch pressed
+            click_count += 1
+            if click_count == 1:
+                red.on()  # Red on
+                yellow.off()
+                green.off()
+                current_state = "red"
+            elif click_count == 2:
+                yellow.on()  # Yellow on
+                red.off()
+                green.off()
+                current_state = "yellow"
+            elif click_count == 3:
+                green.on()  # Green on
+                yellow.off()
+                red.off()
+                current_state = "green"
+            elif click_count > 3:
+                click_count = 0
+                red.off()
+                yellow.off()
+                green.off()
+                current_state = "off"
+            time.sleep(0.5)  # Delay for switch debouncing
+
+except KeyboardInterrupt:
+    print("Traffic light simulation stopped.")
